@@ -3,9 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Book(Base):
-    __tablename__ = "books"
+class Inventory(Base):
+    __tablename__ = 'inventories'
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    author = Column(String, index=True)
-    year = Column(Integer)
+    item_name = Column(String, index=True)
+    quantity = Column(Integer)
