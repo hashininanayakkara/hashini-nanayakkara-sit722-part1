@@ -1,17 +1,13 @@
 from pydantic import BaseModel
 
-class BookBase(BaseModel):
-    title: str
-    author: str
-    year: int
+class InventoryBase(BaseModel):
+    item_name: str
+    quantity: int
 
-class BookCreate(BookBase):
+class InventoryCreate(InventoryBase):
     pass
 
-class BookUpdate(BookBase):
-    pass
-
-class BookInDB(BookBase):
+class Inventory(InventoryBase):
     id: int
 
     class Config:
