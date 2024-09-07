@@ -7,7 +7,10 @@ class InventoryBase(BaseModel):
 class InventoryCreate(InventoryBase):
     pass
 
-class Inventory(InventoryBase):
+class InventoryUpdate(InventoryBase):
+    pass
+
+class InventoryInDB(InventoryBase):
     id: int
 
     class Config:
