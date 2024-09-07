@@ -1,10 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from typing import Optional
 
-from models import Book, Base
-from schemas import BookBase, BookCreate, BookInDB, BookUpdate
+from models import Inventory, Base
+from schemas import InventoryBase, InventoryCreate, InventoryInDB, InventoryUpdate
 from db import engine, get_db
 
 # Create tables if they do not exist
@@ -13,46 +12,46 @@ Base.metadata.create_all(bind=engine)
 # Initialize FastAPI app
 app = FastAPI()
 
-# Endpoint to create a new book
-@app.post("/books/", response_model=BookInDB)
-def create_book(book: BookCreate, db: Session = Depends(get_db)):
-    db_book = Book(**book.dict())
-    db.add(db_book)
+# Endpoint to create a new inventory item
+@app.post("/inventories/", response_model=InventoryInDB)
+def create_inventory(inventory: InventoryCreate, db: Session = Depends(get_db)):
+    db_inventory = Inventory(**inventory.dict())
+    db.add(db_inventory)
     db.commit()
-    db.refresh(db_book)
-    return db_book
+    db.refresh(db_inventory)
+    return db_inventory
 
-# Endpoint to retrieve a book by ID
-@app.get("/books/{book_id}", response_model=BookInDB)
-def get_book(book_id: int, db: Session = Depends(get_db)):
-    db_book = db.query(Book).filter(Book.id == book_id).first()
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return db_book
+# Endpoint to retrieve an inventory item by ID
+@app.get("/inventories/{inventory_id}", response_model=InventoryInDB)
+def get_inventory(inventory_id: int, db: Session = Depends(get_db)):
+    db_inventory = db.query(Inventory).filter(Inventory.id == inventory_id).first()
+    if db_inventory is None:
+        raise HTTPException(status_code=404, detail="Inventory not found")
+    return db_inventory
 
-# Endpoint to retrieve all books
-@app.get("/books/", response_model=List[BookInDB])
-def get_all_books(db: Session = Depends(get_db)):
-    return db.query(Book).all()
+# Endpoint to retrieve all inventory items
+@app.get("/inventories/", response_model=List[InventoryInDB])
+def get_all_inventories(db: Session = Depends(get_db)):
+    return db.query(Inventory).all()
 
-# Endpoint to update a book by ID
-@app.put("/books/{book_id}", response_model=BookInDB)
-def update_book(book_id: int, book: BookUpdate, db: Session = Depends(get_db)):
-    db_book = db.query(Book).filter(Book.id == book_id).first()
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    for field, value in book.dict().items():
-        setattr(db_book, field, value)
+# Endpoint to update an inventory item by ID
+@app.put("/inventories/{inventory_id}", response_model=InventoryInDB)
+def update_inventory(inventory_id: int, inventory: InventoryUpdate, db: Session = Depends(get_db)):
+    db_inventory = db.query(Inventory).filter(Inventory.id == inventory_id).first()
+    if db_inventory is None:
+        raise HTTPException(status_code=404, detail="Inventory not found")
+    for field, value in inventory.dict().items():
+        setattr(db_inventory, field, value)
     db.commit()
-    db.refresh(db_book)
-    return db_book
+    db.refresh(db_inventory)
+    return db_inventory
 
-# Endpoint to delete a book by ID
-@app.delete("/books/{book_id}", response_model=BookInDB)
-def delete_book(book_id: int, db: Session = Depends(get_db)):
-    db_book = db.query(Book).filter(Book.id == book_id).first()
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    db.delete(db_book)
+# Endpoint to delete an inventory item by ID
+@app.delete("/inventories/{inventory_id}", response_model=InventoryInDB)
+def delete_inventory(inventory_id: int, db: Session = Depends(get_db)):
+    db_inventory = db.query(Inventory).filter(Inventory.id == inventory_id).first()
+    if db_inventory is None:
+        raise HTTPException(status_code=404, detail="Inventory not found")
+    db.delete(db_inventory)
     db.commit()
-    return db_book
+    return db_inventory
